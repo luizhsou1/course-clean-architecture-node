@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/luizhsou1/course-clean-architecture-node#readme",
   "devDependencies": {
-    "git-commit-msg-linter": "^2.4.2"
+    "@types/node": "^13.13.2",
+    "git-commit-msg-linter": "^2.4.2",
+    "typescript": "^3.8.3"
   }
 }
