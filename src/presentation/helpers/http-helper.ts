@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IHttpResponse } from '../protocols/http-interface';
 import { ServerError } from '../errors';
 
