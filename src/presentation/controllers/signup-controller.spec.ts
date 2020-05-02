@@ -1,15 +1,13 @@
+/* eslint-disable @typescript-eslint/interface-name-prefix */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
 import { MissingParamError, InvalidParamError, ServerError } from '../errors';
-import { EmailValidatorInterface } from '../protocols';
-import { EmailValidatorAdapter } from '../../../codigo-professor/src/infra/validators/email-validator-adapter';
+import { IEmailValidator } from '../protocols';
+import { IAccountModel } from '../../domain/models/account';
+import { IAddAccount, IAddAccountModel } from '../../domain/usecases/add-account';
 
-interface SutTypesInterface {
-  sut: SignUpController;
-  emailValidatorStub: EmailValidatorInterface;
-}
-
-const makeEmailValidator = (): EmailValidatorInterface => {
-  class EmailValidatorStub implements EmailValidatorInterface {
+const makeEmailValidator = (): IEmailValidator => {
+  class EmailValidatorStub implements IEmailValidator {
     isValid(email: string): boolean {
       return true;
     }
@@ -17,12 +15,35 @@ const makeEmailValidator = (): EmailValidatorInterface => {
   return new EmailValidatorStub();
 };
 
-const makeSut = (): SutTypesInterface => {
+const makeAddAccount = (): IAddAccount => {
+  class AddAccountStub implements IAddAccount {
+    add(account: IAddAccountModel): IAccountModel {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'valid_password',
+      };
+      return fakeAccount;
+    }
+  }
+  return new AddAccountStub();
+};
+
+interface ISutTypes {
+  sut: SignUpController;
+  emailValidatorStub: IEmailValidator;
+  addAccountStub: IAddAccount;
+}
+
+const makeSut = (): ISutTypes => {
   const emailValidatorStub = makeEmailValidator();
-  const sut = new SignUpController(emailValidatorStub);
+  const addAccountStub = makeAddAccount();
+  const sut = new SignUpController(emailValidatorStub, addAccountStub);
   return {
     sut,
     emailValidatorStub,
+    addAccountStub,
   };
 };
 
@@ -146,5 +167,24 @@ describe('SignUp Controller', () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  test('Should call AddAccount with correct values', () => {
+    const { sut, addAccountStub } = makeSut();
+    const addSpy = jest.spyOn(addAccountStub, 'add'); // Alterando o valor default que era true, passando a ser false
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    };
+    sut.handle(httpRequest);
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+    });
   });
 });
