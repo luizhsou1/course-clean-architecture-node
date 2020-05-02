@@ -1,4 +1,4 @@
-import { IAccountModel } from '../models/account';
+import { IAccountModel } from '../models/account-interface';
 
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 export interface IAddAccountModel {
