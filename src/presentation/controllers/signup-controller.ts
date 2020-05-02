@@ -1,19 +1,17 @@
-import {
-  HttpRequestInterface,
-  HttpResponseInterface,
-  ControllerInterface,
-  EmailValidatorInterface,
-} from '../protocols';
+import { IHttpRequest, IHttpResponse, IController, IEmailValidator } from '../protocols';
 import { badRequest, serverError } from '../helpers/http-helper';
 import { MissingParamError, InvalidParamError } from '../errors';
+import { IAddAccount } from '../../domain/usecases/add-account';
 
-export class SignUpController implements ControllerInterface {
-  private readonly emailValidator: EmailValidatorInterface;
-  constructor(emailValidator: EmailValidatorInterface) {
+export class SignUpController implements IController {
+  private readonly emailValidator: IEmailValidator;
+  private readonly addAccount: IAddAccount;
+  constructor(emailValidator: IEmailValidator, addAccount: IAddAccount) {
     this.emailValidator = emailValidator;
+    this.addAccount = addAccount;
   }
 
-  handle(httpRequest: HttpRequestInterface): HttpResponseInterface {
+  handle(httpRequest: IHttpRequest): IHttpResponse {
     try {
       const requiredFields = ['name', 'email', 'password', 'passwordConfirmation'];
       for (const field of requiredFields) {
@@ -21,7 +19,7 @@ export class SignUpController implements ControllerInterface {
           return badRequest(new MissingParamError(field));
         }
       }
-      const { email, password, passwordConfirmation } = httpRequest.body;
+      const { name, email, password, passwordConfirmation } = httpRequest.body;
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'));
       }
@@ -30,6 +28,12 @@ export class SignUpController implements ControllerInterface {
       if (!isValid) {
         return badRequest(new InvalidParamError('email'));
       }
+
+      this.addAccount.add({
+        name,
+        email,
+        password,
+      });
     } catch (error) {
       return serverError();
     }

@@ -1,5 +1,6 @@
-import { HttpRequestInterface, HttpResponseInterface } from './http-interface';
+/* eslint-disable @typescript-eslint/interface-name-prefix */
+import { IHttpRequest, IHttpResponse } from './http-interface';
 
-export interface ControllerInterface {
-  handle(httpRequest: HttpRequestInterface): HttpResponseInterface;
+export interface IController {
+  handle(httpRequest: IHttpRequest): IHttpResponse;
 }

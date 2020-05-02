@@ -1,12 +1,12 @@
-import { HttpResponseInterface } from '../protocols/http-interface';
+import { IHttpResponse } from '../protocols/http-interface';
 import { ServerError } from '../errors';
 
-export const badRequest = (error: Error): HttpResponseInterface => ({
+export const badRequest = (error: Error): IHttpResponse => ({
   statusCode: 400,
   body: error,
 });
 
-export const serverError = (): HttpResponseInterface => ({
+export const serverError = (): IHttpResponse => ({
   statusCode: 500,
   body: new ServerError(),
 });
