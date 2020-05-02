@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
-import { MissingParamError, InvalidParamError, ServerError } from '../errors';
-import { IEmailValidator } from '../protocols';
-import { IAccountModel } from '../../domain/models/account';
-import { IAddAccount, IAddAccountModel } from '../../domain/usecases/add-account';
+import { MissingParamError, InvalidParamError, ServerError } from '../../errors';
+import { IEmailValidator, IAccountModel, IAddAccount, IAddAccountModel } from './signup-protocols';
 
 const makeEmailValidator = (): IEmailValidator => {
   class EmailValidatorStub implements IEmailValidator {
