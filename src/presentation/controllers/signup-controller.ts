@@ -1,7 +1,10 @@
-import { HttpRequestInterface, HttpResponseInterface } from '../protocols/http-interface';
+import {
+  HttpRequestInterface,
+  HttpResponseInterface,
+  ControllerInterface,
+  EmailValidatorInterface,
+} from '../protocols';
 import { badRequest, serverError } from '../helpers/http-helper';
-import { ControllerInterface } from '../protocols/controller-interface';
-import { EmailValidatorInterface } from '../protocols/email-validator-interface';
 import { MissingParamError, InvalidParamError } from '../errors';
 
 export class SignUpController implements ControllerInterface {
