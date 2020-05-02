@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 import { DbAddAccount } from './db-add-account';
-import { IEncrypter } from '../../protocols/encrypter-interface';
+import { IEncrypter } from './db-add-account-protocols';
 
 interface ISutTypes {
   sut: DbAddAccount;
