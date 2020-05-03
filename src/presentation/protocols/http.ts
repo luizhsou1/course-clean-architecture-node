@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface IHttpRequest {
+export interface HttpRequest {
   body?: any;
 }
 
-export interface IHttpResponse {
+export interface HttpResponse {
   statusCode: number;
   body: any;
 }

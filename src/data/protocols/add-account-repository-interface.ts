@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
-import { IAddAccountModel } from '../../domain/usecases/add-account-interface';
-import { IAccountModel } from '../../domain/models/account-interface';
+import { AddAccountModel } from '../../domain/usecases/add-account';
+import { AccountModel } from '../../domain/models/account';
 
-export interface IAddAccountRepository {
-  add(account: IAddAccountModel): Promise<IAccountModel>;
+export interface AddAccountRepository {
+  add(account: AddAccountModel): Promise<AccountModel>;
 }

@@ -1,4 +1,4 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
-export interface IEmailValidator {
+export interface EmailValidator {
   isValid(email: string): boolean;
 }

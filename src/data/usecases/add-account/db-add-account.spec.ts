@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 import { DbAddAccount } from './db-add-account';
-import { IEncrypter, IAddAccountModel, IAccountModel, IAddAccountRepository } from './db-add-account-protocols';
+import { Encrypter, AddAccountModel, AccountModel, AddAccountRepository } from './db-add-account-protocols';
 
-const makeEncrypter = (): IEncrypter => {
-  class EncrypterStub implements IEncrypter {
+const makeEncrypter = (): Encrypter => {
+  class EncrypterStub implements Encrypter {
     async encrypt(value: string): Promise<string> {
       return new Promise((resolve) => resolve('hashed_password'));
     }
@@ -11,9 +11,9 @@ const makeEncrypter = (): IEncrypter => {
   return new EncrypterStub();
 };
 
-const makeAddAccountrepository = (): IAddAccountRepository => {
-  class AddAccountrepositoryStuby implements IAddAccountRepository {
-    async add(account: IAddAccountModel): Promise<IAccountModel> {
+const makeAddAccountrepository = (): AddAccountRepository => {
+  class AddAccountrepositoryStuby implements AddAccountRepository {
+    async add(account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
@@ -28,8 +28,8 @@ const makeAddAccountrepository = (): IAddAccountRepository => {
 
 interface ISutTypes {
   sut: DbAddAccount;
-  encrypterStub: IEncrypter;
-  addAccountRepositoryStub: IAddAccountRepository;
+  encrypterStub: Encrypter;
+  addAccountRepositoryStub: AddAccountRepository;
 }
 
 const makeSut = (): ISutTypes => {

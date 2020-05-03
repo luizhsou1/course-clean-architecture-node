@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors';
-import { IEmailValidator, IAccountModel, IAddAccount, IAddAccountModel } from './signup-protocols';
+import { EmailValidator, AccountModel, AddAccount, AddAccountModel } from './signup-protocols';
 
-const makeEmailValidator = (): IEmailValidator => {
-  class EmailValidatorStub implements IEmailValidator {
+const makeEmailValidator = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
     isValid(email: string): boolean {
       return true;
     }
@@ -13,9 +13,9 @@ const makeEmailValidator = (): IEmailValidator => {
   return new EmailValidatorStub();
 };
 
-const makeAddAccount = (): IAddAccount => {
-  class AddAccountStub implements IAddAccount {
-    async add(account: IAddAccountModel): Promise<IAccountModel> {
+const makeAddAccount = (): AddAccount => {
+  class AddAccountStub implements AddAccount {
+    async add(account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
@@ -30,8 +30,8 @@ const makeAddAccount = (): IAddAccount => {
 
 interface ISutTypes {
   sut: SignUpController;
-  emailValidatorStub: IEmailValidator;
-  addAccountStub: IAddAccount;
+  emailValidatorStub: EmailValidator;
+  addAccountStub: AddAccount;
 }
 
 const makeSut = (): ISutTypes => {
