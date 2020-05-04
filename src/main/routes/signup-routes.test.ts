@@ -12,7 +12,7 @@ describe('Signup Routes', () => {
   });
 
   beforeEach(async () => {
-    const accountCollection = MongoHelper.getCollection('accounts');
+    const accountCollection = await MongoHelper.getCollection('accounts');
     accountCollection.deleteMany({}); // Remove todos os registros do documento account
   });
 
