@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'; // json faz exatamente o que o body parser fazia, o express integrou essa biblioteca dentro dele
+import { Request, Response, NextFunction } from 'express';
 
 export const cors = (req: Request, res: Response, next: NextFunction): void => {
   res.set('acess-control-allow-origin', '*');
