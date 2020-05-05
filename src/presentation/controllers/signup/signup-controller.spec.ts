@@ -3,18 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors';
-import { EmailValidator, AccountModel, AddAccount, AddAccountModel, Validation } from './signup-protocols';
+import { AccountModel, AddAccount, AddAccountModel, Validation } from './signup-protocols';
 import { HttpRequest } from '../../protocols';
 import { ok, badRequest, serverError } from '../../helpers/http-helper';
-
-const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid(email: string): boolean {
-      return true;
-    }
-  }
-  return new EmailValidatorStub();
-};
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
@@ -53,48 +44,22 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 
 interface SutTypes {
   sut: SignUpController;
-  emailValidatorStub: EmailValidator;
   addAccountStub: AddAccount;
   validationStub: Validation;
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator();
   const addAccountStub = makeAddAccount();
   const validationStub = makeValidation();
-  const sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
+  const sut = new SignUpController(addAccountStub, validationStub);
   return {
     sut,
-    emailValidatorStub,
     addAccountStub,
     validationStub,
   };
 };
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if an invalid email is provided', async () => {
-    const { sut, emailValidatorStub } = makeSut();
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false); // Alterando o valor default que era true, passando a ser false
-    const httpResponse = await sut.handle(makeFakeHttpRequest());
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
-  });
-
-  test('Should call EmailValidator with correct email', async () => {
-    const { sut, emailValidatorStub } = makeSut();
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid'); // Alterando o valor default que era true, passando a ser false
-    await sut.handle(makeFakeHttpRequest());
-    expect(isValidSpy).toHaveBeenLastCalledWith('any_email@mail.com');
-  });
-
-  test('Should return 500 if EmailValidator throws', async () => {
-    const { sut, emailValidatorStub } = makeSut();
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error();
-    });
-    const httpResponse = await sut.handle(makeFakeHttpRequest());
-    expect(httpResponse).toEqual(serverError(new ServerError(null)));
-  });
-
   test('Should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut();
     const addSpy = jest.spyOn(addAccountStub, 'add');
