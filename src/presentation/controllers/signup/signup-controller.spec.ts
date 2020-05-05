@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors';
-import { EmailValidator, AccountModel, AddAccount, AddAccountModel } from './signup-protocols';
+import { EmailValidator, AccountModel, AddAccount, AddAccountModel, Validation } from './signup-protocols';
 import { HttpRequest } from '../../protocols';
 import { ok, badRequest, serverError } from '../../helpers/http-helper';
 
@@ -32,6 +33,15 @@ const makeAddAccount = (): AddAccount => {
   return new AddAccountStub();
 };
 
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate(input: any): Error {
+      return null;
+    }
+  }
+  return new ValidationStub();
+};
+
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
     name: 'any_name',
@@ -41,20 +51,23 @@ const makeFakeHttpRequest = (): HttpRequest => ({
   },
 });
 
-interface ISutTypes {
+interface SutTypes {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
   addAccountStub: AddAccount;
+  validationStub: Validation;
 }
 
-const makeSut = (): ISutTypes => {
+const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator();
   const addAccountStub = makeAddAccount();
-  const sut = new SignUpController(emailValidatorStub, addAccountStub);
+  const validationStub = makeValidation();
+  const sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
   return {
     sut,
     emailValidatorStub,
     addAccountStub,
+    validationStub,
   };
 };
 
@@ -174,5 +187,13 @@ describe('SignUp Controller', () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle(makeFakeHttpRequest());
     expect(httpResponse).toEqual(ok(makeFakeAccount()));
+  });
+
+  test('Should call Validation with correct value', async () => {
+    const { sut, validationStub } = makeSut();
+    const validateSpy = jest.spyOn(validationStub, 'validate'); // Alterando o valor default que era true, passando a ser false
+    const httpRequest = makeFakeHttpRequest();
+    await sut.handle(httpRequest);
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 });
