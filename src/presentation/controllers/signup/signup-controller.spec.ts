@@ -165,7 +165,7 @@ describe('SignUp Controller', () => {
 
   test('Should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut();
-    const addSpy = jest.spyOn(addAccountStub, 'add'); // Alterando o valor default que era true, passando a ser false
+    const addSpy = jest.spyOn(addAccountStub, 'add');
     await sut.handle(makeFakeHttpRequest());
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
@@ -191,9 +191,16 @@ describe('SignUp Controller', () => {
 
   test('Should call Validation with correct value', async () => {
     const { sut, validationStub } = makeSut();
-    const validateSpy = jest.spyOn(validationStub, 'validate'); // Alterando o valor default que era true, passando a ser false
+    const validateSpy = jest.spyOn(validationStub, 'validate');
     const httpRequest = makeFakeHttpRequest();
     await sut.handle(httpRequest);
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  test('Should return 400 if validation returns an error', async () => {
+    const { sut, validationStub } = makeSut();
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'));
+    const httpResponse = await sut.handle(makeFakeHttpRequest());
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')));
   });
 });
