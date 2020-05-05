@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
-import { MissingParamError, InvalidParamError, ServerError } from '../../errors';
+import { MissingParamError, ServerError } from '../../errors';
 import { AccountModel, AddAccount, AddAccountModel, Validation } from './signup-protocols';
 import { HttpRequest } from '../../protocols';
-import { ok, badRequest, serverError } from '../../helpers/http-helper';
+import { ok, badRequest, serverError } from '../../helpers/http/http-helper';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
