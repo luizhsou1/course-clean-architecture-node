@@ -125,7 +125,7 @@ describe('DBAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  test('Should call TokenGenerator with correct id', async () => {
+  test('Should return a token on success', async () => {
     const { sut } = makeSut();
     const acessToken = await sut.auth(makeFakeAuthentication());
     expect(acessToken).toBe('any_token');
