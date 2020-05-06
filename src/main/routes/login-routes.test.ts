@@ -1,6 +1,10 @@
 import request from 'supertest';
 import app from '../config/app';
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper';
+import { Collection } from 'mongodb';
+import { BcryptAdapter } from '../../infra/criptography/bcrypt-adapter/bcrypt-adapter';
+
+let accountCollection: Collection;
 
 describe('Login Routes', () => {
   beforeAll(async () => {
@@ -12,7 +16,7 @@ describe('Login Routes', () => {
   });
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts');
+    accountCollection = await MongoHelper.getCollection('accounts');
     accountCollection.deleteMany({}); // Remove todos os registros do documento account
   });
 
@@ -25,6 +29,25 @@ describe('Login Routes', () => {
           email: 'luizhsou1@gmail.com',
           password: '123',
           passwordConfirmation: '123',
+        })
+        .expect(200);
+    });
+  });
+
+  describe('POST /login', () => {
+    test('Should return 200 on login', async () => {
+      const bcryptAdapter = new BcryptAdapter(12);
+      const password = await bcryptAdapter.hash('123');
+      await accountCollection.insertOne({
+        name: 'Luiz',
+        email: 'luizhsou1@gmail.com',
+        password,
+      });
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'luizhsou1@gmail.com',
+          password: '123',
         })
         .expect(200);
     });
