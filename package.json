@@ -1,6 +1,6 @@
 {
   "name": "extractor-class",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "nf-extractor-classifier",
   "main": "index.js",
   "scripts": {
