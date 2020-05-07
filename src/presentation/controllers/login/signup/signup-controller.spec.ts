@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
-import { MissingParamError, ServerError, EmailInUseError } from '../../errors';
+import { MissingParamError, ServerError, EmailInUseError } from '../../../errors';
 import {
   AccountModel,
   AddAccount,
@@ -11,8 +11,8 @@ import {
   Authentication,
   AuthenticationModel,
 } from './signup-protocols';
-import { HttpRequest } from '../../protocols';
-import { ok, badRequest, serverError, forbidden } from '../../helpers/http/http-helper';
+import { HttpRequest } from '../../../protocols';
+import { ok, badRequest, serverError, forbidden } from '../../../helpers/http/http-helper';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
