@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Validation } from '../../protocols/validation';
-import { InvalidParamError } from '../../errors';
-import { EmailValidator } from '../../protocols';
+import { Validation } from '../../presentation/protocols';
+import { InvalidParamError } from '../../presentation/errors';
+import { EmailValidator } from '../protocols/email-validator';
 
 export class EmailValidation implements Validation {
   constructor(private readonly fieldName: string, private readonly emailValidator: EmailValidator) {}
