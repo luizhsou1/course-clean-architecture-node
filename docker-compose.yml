@@ -13,10 +13,12 @@ services:
     build: .
     restart: always
     image: nf-extractor-classifier
-    command: npm start
+    command: npm run debug
     volumes:
       - ./dist:/usr/src/nf-extractor-classifier/dist
+      - ./package.json:/usr/src/nf-extractor-classifier/package.json
     ports:
       - '5050:5050'
+      - '9222:9222'
     links:
       - mongo
