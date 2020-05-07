@@ -1,5 +1,4 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from './add-survey-protocols';
-import { resolve } from 'dns';
 
 export class AddSurveyController implements Controller {
   constructor(private readonly validation: Validation) {}
