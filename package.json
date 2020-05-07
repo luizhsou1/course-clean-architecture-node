@@ -9,6 +9,7 @@
     "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
     "dev": "sucrase-node src/main/server.ts",
     "up": "npm run build && docker-compose up -d",
+    "up:details": "npm run build && docker-compose up",
     "down": "docker-compose down",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
