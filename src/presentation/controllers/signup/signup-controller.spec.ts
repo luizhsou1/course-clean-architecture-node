@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller';
-import { MissingParamError, ServerError } from '../../errors';
+import { MissingParamError, ServerError, EmailInUseError } from '../../errors';
 import {
   AccountModel,
   AddAccount,
@@ -12,7 +12,7 @@ import {
   AuthenticationModel,
 } from './signup-protocols';
 import { HttpRequest } from '../../protocols';
-import { ok, badRequest, serverError } from '../../helpers/http/http-helper';
+import { ok, badRequest, serverError, forbidden } from '../../helpers/http/http-helper';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
@@ -97,6 +97,13 @@ describe('SignUp Controller', () => {
     });
     const httpResponse = await sut.handle(makeFakeHttpRequest());
     expect(httpResponse).toEqual(serverError(new ServerError(null)));
+  });
+
+  test('Should return 403 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut();
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise((resolve) => resolve(null)));
+    const httpResponse = await sut.handle(makeFakeHttpRequest());
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()));
   });
 
   test('Should return 200 if valid data is provided provided', async () => {
